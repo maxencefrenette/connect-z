@@ -1,2 +1,2 @@
-# connect4-zig
+# connect-z
 A Connect-4 AI written in Zig
