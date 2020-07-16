@@ -1,4 +1,6 @@
 const std = @import("std");
+const Position = @import("position").Position;
+const expect = std.testing.expect;
 
 pub fn main() !void {
     std.debug.warn("{}", .{std.builtin.mode});
