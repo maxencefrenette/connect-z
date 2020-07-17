@@ -12,6 +12,9 @@ benchmarks = [
 
 run("zig build -Drelease-fast", check=True)
 
+print("Benchmark  | Mean time (μs) | Mean nodes")
+print("---------- +----------------+-----------")
+
 for benchmark in benchmarks:
     with open(f"./benchmark/data/{benchmark}") as file:
         positions = []
@@ -51,5 +54,4 @@ for benchmark in benchmarks:
         nodes_explored_list.append(nodes_explored)
         time_taken_list.append(time_taken)
 
-    print(f"Average nodes explored: {mean(nodes_explored_list)}")
-    print(f"Average time (μs): {mean(time_taken_list)}")
+    print(f"{benchmark} | {mean(time_taken_list):>14.2f} | {mean(nodes_explored_list):>10.0f}")
