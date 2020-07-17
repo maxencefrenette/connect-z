@@ -49,10 +49,10 @@ pub const Position = struct {
             return true;
         }
 
-        inline for ([_]i8{ -1, 1, 0 }) |dy| {
+        inline for ([_]i8{ -1, 0, 1 }) |dy| {
             var nb: u8 = 0;
 
-            inline for ([_]i8{ -1, 0 }) |dx| {
+            inline for ([_]i8{ -1, 1 }) |dx| {
                 var x = @intCast(i8, col) + dx;
                 var y = @intCast(i8, self.height[col]) + dx * dy;
                 while (x >= 0 and x < Width and y >= 0 and y < Height and self.board[@intCast(u8, x)][@intCast(u8, y)] == current_player) {
