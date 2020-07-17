@@ -3,14 +3,14 @@ const assert = std.debug.assert;
 const expect = std.testing.expect;
 
 pub const Position = struct {
-    const Width = 7;
-    const Height = 6;
+    pub const Width = 7;
+    pub const Height = 6;
 
     board: [Width][Height]u2,
     height: [Width]u8,
     moves: u8,
 
-    pub fn start() Position {
+    pub fn init() Position {
         return Position{
             .board = [_][Height]u2{[_]u2{0} ** Height} ** Width,
             .height = [_]u8{0} ** Width,
@@ -18,12 +18,18 @@ pub const Position = struct {
         };
     }
 
-    pub fn fromSequence(seq: []u8) Position {
-        return Position{
-            .board = undefined,
-            .height = undefined,
-            .moves = undefined,
-        };
+    pub fn fromSequence(seq: []const u8) Position {
+        var pos = Position.init();
+
+        for (seq) |c| {
+            if (c < '1' or '1' + Width <= c) {
+                std.debug.warn("Invalid character: #{}#", .{c});
+                @panic("Invalid Sequence Error");
+            }
+            pos.play(c - '1');
+        }
+
+        return pos;
     }
 
     pub fn canPlay(self: @This(), col: u8) bool {
@@ -62,56 +68,40 @@ pub const Position = struct {
         return false;
     }
 
-    pub fn moves(self: @This()) u8 {
+    pub fn numMoves(self: @This()) u8 {
         return self.moves;
     }
 };
 
 test "start position" {
-    _ = Position.start();
+    _ = Position.init();
 }
 
 test "position from sequence" {
-    _ = Position.fromSequence("");
+    _ = Position.fromSequence("1234567");
 }
 
 test "can play" {
-    const p = Position.start();
+    const p = Position.init();
     expect(p.canPlay(0));
 }
 
 test "play" {
-    var p = Position.start();
+    var p = Position.init();
     p.play(0);
 }
 
 test "start position is not winning move" {
-    const p = Position.start();
+    const p = Position.init();
     expect(p.isWinningMove(0) == false);
 }
 
 test "vertical winning move" {
-    var p = Position.start();
-
-    p.play(0);
-    p.play(1);
-    p.play(0);
-    p.play(1);
-    p.play(0);
-    p.play(1);
-
+    var p = Position.fromSequence("121212");
     expect(p.isWinningMove(0) == true);
 }
 
 test "horizontal winning move" {
-    var p = Position.start();
-
-    p.play(0);
-    p.play(0);
-    p.play(1);
-    p.play(1);
-    p.play(2);
-    p.play(2);
-
+    var p = Position.fromSequence("112233");
     expect(p.isWinningMove(3) == true);
 }

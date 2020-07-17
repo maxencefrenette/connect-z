@@ -5,7 +5,7 @@ pub fn build(b: *Builder) void {
     const mode = b.standardReleaseOptions();
 
     // Test
-    const tests = b.addTest("src/position.zig");
+    const tests = b.addTest("src/main.zig");
     const test_step = b.step("test", "Run all tests");
     test_step.dependOn(&tests.step);
 
