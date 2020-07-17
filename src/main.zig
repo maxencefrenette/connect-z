@@ -31,6 +31,10 @@ test "connect-z" {
     _ = @import("solver.zig");
 }
 
+test "con't trim non-eol" {
+    expect(std.mem.eql(u8, trimEol("foo"), "foo"));
+}
+
 test "trim eol \\n" {
     expect(std.mem.eql(u8, trimEol("foo\n"), "foo"));
 }
