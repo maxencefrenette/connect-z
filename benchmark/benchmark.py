@@ -52,4 +52,4 @@ for benchmark in benchmarks:
         time_taken_list.append(time_taken)
 
     print(f"Average nodes explored: {mean(nodes_explored_list)}")
-    print(f"Average time (s): {mean(time_taken_list) / 1000000}")
+    print(f"Average time (μs): {mean(time_taken_list)}")

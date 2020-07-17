@@ -1,6 +1,7 @@
 const std = @import("std");
 const expect = std.testing.expect;
 const parseInt = std.fmt.parseInt;
+const Timer = std.time.Timer;
 const Position = @import("position.zig").Position;
 const Solver = @import("solver.zig").Solver;
 
@@ -13,9 +14,12 @@ pub fn main() !void {
         const seq = trimEol(line);
         var position = Position.fromSequence(seq);
         var solver = Solver.init();
-        const score = solver.solve(position);
 
-        try stdout.print("{} {} {} {}\n", .{ seq, score, solver.nodes_explored, "1000" });
+        const timer = try Timer.start();
+        const score = solver.solve(position);
+        const time_elapsed = @divFloor(timer.read(), 1000);
+
+        try stdout.print("{} {} {} {}\n", .{ seq, score, solver.nodes_explored, time_elapsed });
     }
 }
 
