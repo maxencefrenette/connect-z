@@ -37,13 +37,13 @@ pub const Position = struct {
     }
 
     pub fn play(self: *@This(), col: u8) void {
-        self.board[col][self.height[col]] = @truncate(u2, 1 + self.moves % 2);
+        self.board[col][self.height[col]] = @intCast(u2, 1 + self.moves % 2);
         self.height[col] += 1;
         self.moves += 1;
     }
 
     pub fn isWinningMove(self: @This(), col: u8) bool {
-        const current_player = @truncate(u2, 1 + self.moves % 2);
+        const current_player = @intCast(u2, 1 + self.moves % 2);
 
         if (self.height[col] >= 3 and self.board[col][self.height[col] - 1] == current_player and self.board[col][self.height[col] - 2] == current_player and self.board[col][self.height[col] - 3] == current_player) {
             return true;
