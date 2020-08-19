@@ -8,16 +8,16 @@ pub const Solver = struct {
     const MaxScore = @divTrunc(Position.Width * Position.Height, 2);
 
     nodes_explored: u64,
-    column_order: [Position.Width]i8,
+    column_order: [Position.Width]u8,
 
     pub fn init() Solver {
         // initialize the column exploration order, starting with center columns
-        var column_order: [Position.Width]i8 = undefined;
-        var i: u7 = 0;
+        var column_order: [Position.Width]u8 = undefined;
+        var i: u8 = 0;
         while (i < Position.Width) : (i += 1) {
-            const i_i8: i8 = i;
-            const i_mod2: i8 = i % 2;
-            column_order[i] = Position.Width / 2 + (1 - 2 * i_mod2) * @divTrunc(i_i8 + 1, 2);
+            const i_ = @intCast(i8, i);
+            const i_mod2 = @intCast(i8, i % 2);
+            column_order[i] = @intCast(u8, Position.Width / 2 + (1 - 2 * i_mod2) * @divTrunc(i_ + 1, 2));
         }
 
         return Solver{ .nodes_explored = 0, .column_order = column_order };
@@ -53,7 +53,7 @@ pub const Solver = struct {
         // Recursively explore the game tree
         x = 0;
         while (x < Position.Width) : (x += 1) {
-            const column = @intCast(u8, self.column_order[x]);
+            const column = self.column_order[x];
             if (p.canPlay(column)) {
                 var p2 = p;
                 p2.play(column);
