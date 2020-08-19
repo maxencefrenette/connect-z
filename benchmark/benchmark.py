@@ -57,4 +57,4 @@ for benchmark in benchmarks:
     mean_time_taken = mean(time_taken_list)
     mean_nodes_explored = mean(nodes_explored_list)
 
-    print(f"{benchmark} | {mean_time_taken:>14.2f} | {mean_nodes_explored:>10.0f} | {1000*mean_nodes_explored/mean_time_taken:>8.0f}")
+    print(f"{benchmark} | {mean_time_taken:>14.2f} | {mean_nodes_explored:>10.1f} | {1000*mean_nodes_explored/mean_time_taken:>8.0f}")
