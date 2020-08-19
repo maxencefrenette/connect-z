@@ -1,5 +1,6 @@
 const std = @import("std");
 const expect = std.testing.expect;
+const mem = @import("std").mem;
 const Position = @import("position.zig").Position;
 
 pub const Solver = struct {
@@ -7,9 +8,19 @@ pub const Solver = struct {
     const MaxScore = @divTrunc(Position.Width * Position.Height, 2);
 
     nodes_explored: u64,
+    column_order: [Position.Width]i8,
 
     pub fn init() Solver {
-        return Solver{ .nodes_explored = 0 };
+        // initialize the column exploration order, starting with center columns
+        var column_order: [Position.Width]i8 = undefined;
+        var i: u7 = 0;
+        while (i < Position.Width) : (i += 1) {
+            const i_i8: i8 = i;
+            const i_mod2: i8 = i % 2;
+            column_order[i] = Position.Width / 2 + (1 - 2 * i_mod2) * @divTrunc(i_i8 + 1, 2);
+        }
+
+        return Solver{ .nodes_explored = 0, .column_order = column_order };
     }
 
     pub fn negamax(self: *@This(), p: Position, alpha_arg: i8, beta_arg: i8) i8 {
@@ -42,9 +53,10 @@ pub const Solver = struct {
         // Recursively explore the game tree
         x = 0;
         while (x < Position.Width) : (x += 1) {
-            if (p.canPlay(x)) {
+            const column = @intCast(u8, self.column_order[x]);
+            if (p.canPlay(column)) {
                 var p2 = p;
-                p2.play(x);
+                p2.play(column);
                 const score = -self.negamax(p2, -beta, -alpha);
 
                 // prune the exploration if we find a possible move better than what we were looking for.
@@ -68,4 +80,9 @@ test "win next move" {
     const p = Position.fromSequence("121212");
     var solver = Solver.init();
     expect(solver.solve(p) == 18);
+}
+
+test "column order" {
+    const s = Solver.init();
+    expect(mem.eql(i8, &s.column_order, &[_]i8{ 3, 2, 4, 1, 5, 0, 6 }));
 }
